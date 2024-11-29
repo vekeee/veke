@@ -1,2 +1,2 @@
 # veke
-The main site code of veke.uk
+DDOS protection of veke.uk
