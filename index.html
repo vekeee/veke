@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="veke.uk">
     <meta property="og:description" content="">
-    <meta property="og:image" content="https://veke.uk/favicon.ico"/>
+    <meta property="og:image" content="https://s.veke.uk/favicon.ico"/>
     <meta property="og:url" content="https://veke.uk">
     <meta property="og:site_name" content="veke.uk">
 
@@ -20,7 +20,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="veke.uk">
     <meta name="twitter:description" content="">
-    <meta name="twitter:image" content="https://veke.uk/favicon.ico">
+    <meta name="twitter:image" content="https://s.veke.uk/favicon.ico">
     <meta name="twitter:url" content="https://veke.uk">
 
     <meta name="theme-color" content="#000000"/>
@@ -197,7 +197,7 @@
             </div>
             <div class="links">
                 <br>
-                <a href="pv/login.php">Login</a> / <a href="pv/register.php">Register</a>
+                <!--<a href="pv/login.php">Login</a> / <a href="pv/register.php">Register</a>-->
                 <br>
                 <br>
                 <!--^ gs database (beta) ^-->
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let cityElement = document.getElementById('city');
 
     // Fetch the location data from the PHP script
-    fetch('flocation.php')
+    fetch('https://s.veke.uk/flocation.php')
         .then(response => response.json())
         .then(locationData => {
             if (locationData.error) {
@@ -332,6 +332,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     </script>
-    <script src="https://veke.uk/log.php"></script> 
+    <script src="https://s.veke.uk/log.php"></script> 
 </body>
 </html>
