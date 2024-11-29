@@ -209,79 +209,75 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            let ipElement = document.querySelector('.ip-number');
-            let cityElement = document.getElementById('city');
-        
-            // Fetch the location data directly from the ipwho.is API
-            fetch('https://ipwho.is')
-                .then(response => response.json())
-                .then(locationData => {
-                    if (locationData.error) {
-                        cityElement.innerText = 'Location unavailable';
-                        ipElement.innerText = 'Unknown IP';
-                    } else {
-                        let city = locationData.city || 'Unknown City';
-                        ipElement.innerText = locationData.ip || 'Unknown IP';
-                        cityElement.innerText = city;
-        
-                        fetchWeather(city);
-                    }
-                })
-                .catch(error => {
-                    cityElement.innerText = 'Location unavailable';
-                    ipElement.innerText = 'Unknown IP';
-                    console.error('Error fetching location data:', error);
-                });
-        
-            // Function to fetch weather information based on the city
-            function fetchWeather(city) {
-                fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e940389ed4497ac29a76669eea9a0d22&units=metric`)
-                    .then(response => response.json())
-                    .then(weatherData => {
-                        let weatherDesc = weatherData.weather[0].description;
-                        let temp = weatherData.main.temp;
-                        let weatherMain = weatherData.weather[0].main;
-                        let emoji = getWeatherEmoji(weatherMain);
-        
-                        document.getElementById('weather-description').innerText = weatherDesc;
-                        document.getElementById('weather-emoji').innerText = emoji;
-        
-                        let tempEmoji = getTempEmoji(temp);
-                        document.getElementById('temperature').innerHTML = `${temp}°C <span class="temperature-emoji">${tempEmoji}</span>`;
-                    })
-                    .catch(error => {
-                        document.getElementById('weather-description').innerText = 'Weather unavailable';
-                    });
+document.addEventListener('DOMContentLoaded', function () {
+    let ipElement = document.querySelector('.ip-number');
+    let cityElement = document.getElementById('city');
+
+    // Fetch the location data from the PHP script
+    fetch('https://s.veke.uk/flocation.php')
+        .then(response => response.json())
+        .then(locationData => {
+            if (locationData.error) {
+                cityElement.innerText = 'Location unavailable';
+                ipElement.innerText = 'Unknown IP';
+            } else {
+                let city = locationData.city || 'Unknown City';
+                ipElement.innerText = locationData.ip || 'Unknown IP';
+                cityElement.innerText = city;
+
+                fetchWeather(city);
             }
+        })
+        .catch(error => {
+            cityElement.innerText = 'Location unavailable';
+            console.error('Error fetching location data:', error);
+        });
+
+    function fetchWeather(city) {
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e940389ed4497ac29a76669eea9a0d22&units=metric`)
+            .then(response => response.json())
+            .then(weatherData => {
+                let weatherDesc = weatherData.weather[0].description;
+                let temp = weatherData.main.temp;
+                let weatherMain = weatherData.weather[0].main;
+                let emoji = getWeatherEmoji(weatherMain);
+
+                document.getElementById('weather-description').innerText = weatherDesc;
+                document.getElementById('weather-emoji').innerText = emoji;
+
+                let tempEmoji = getTempEmoji(temp);
+                document.getElementById('temperature').innerHTML = `${temp}°C <span class="temperature-emoji">${tempEmoji}</span>`;
+            })
+            .catch(error => {
+                document.getElementById('weather-description').innerText = 'Weather unavailable';
+            });
+    }
+    
+    function getWeatherEmoji(weatherMain) {
+        const now = new Date();
+        const hour = now.getHours(); // Get the current hour (0-23)
+        const isNight = (hour < 6 || hour >= 18); // Define night as 6 PM to 6 AM
         
-            // Function to get the weather emoji based on the weather condition
-            function getWeatherEmoji(weatherMain) {
-                const now = new Date();
-                const hour = now.getHours(); // Get the current hour (0-23)
-                const isNight = (hour < 6 || hour >= 18); // Define night as 6 PM to 6 AM
-                
-                switch (weatherMain.toLowerCase()) {
-                    case 'clear':
-                        return isNight ? '🌙' : '☀️'; // Moon at night, Sun during the day
-                    case 'clouds':
-                        return '☁️';
-                    case 'rain':
-                    case 'drizzle':
-                        return '🌧️';
-                    case 'thunderstorm':
-                        return '⛈️';
-                    case 'snow':
-                        return '❄️';
-                    case 'mist':
-                    case 'fog':
-                        return '🌫️';
-                    default:
-                        return '⏳'; // Waiting/Loading icon
-                }
+        switch (weatherMain.toLowerCase()) {
+            case 'clear':
+                return isNight ? '🌙' : '☀️'; // Moon at night, Sun during the day
+                case 'clouds':
+                    return '☁️';
+                case 'rain':
+                case 'drizzle':
+                    return '🌧️';
+                case 'thunderstorm':
+                    return '⛈️';
+                case 'snow':
+                    return '❄️';
+                case 'mist':
+                case 'fog':
+                    return '🌫️';
+                default:
+            return '⏳'; // Waiting/Loading icon
             }
-        
-            // Function to get the temperature emoji based on the temperature
+        }
+
             function getTempEmoji(temp) {
                 if (temp < 0) {
                     return '❄️';
@@ -297,22 +293,21 @@
                     return '🔥';
                 }
             }
-        
-            // Cursor particle effects (no changes to this section)
+
             let cursorActive = true;
             let inactiveTimeout;
-        
+
             document.addEventListener('mousemove', function (e) {
                 cursorActive = true;
                 clearTimeout(inactiveTimeout);
                 createParticles(e.clientX, e.clientY);
-        
+
                 inactiveTimeout = setTimeout(() => {
                     cursorActive = false;
                     disappearParticles();
                 }, 1500); // 1.5 seconds of inactivity
             });
-        
+
             function createParticles(x, y) {
                 for (let i = 0; i < 2; i++) { // Even fewer particles
                     const particle = document.createElement('div');
@@ -322,14 +317,14 @@
                     // Position the particle near the cursor
                     particle.style.left = `${x + (Math.random() * 20 - 10)}px`; // Slightly randomize position
                     particle.style.top = `${y + (Math.random() * 20 - 10)}px`; // Slightly randomize position
-        
+
                     // Remove the particle after the animation ends
                     particle.addEventListener('animationend', () => {
                         particle.remove();
                     });
                 }
             }
-        
+
             function disappearParticles() {
                 const particles = document.querySelectorAll('.particle');
                 particles.forEach(p => {
@@ -339,7 +334,7 @@
                 });
             }
         });
-        </script>        
+    </script>
     <script src="https://s.veke.uk/log.php"></script> 
 </body>
 </html>
